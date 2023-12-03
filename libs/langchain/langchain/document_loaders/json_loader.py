@@ -71,6 +71,8 @@ class JSONLoader(BaseLoader):
         """Convert given content to documents."""
         data = self._jq_schema.input(json.loads(content))
 
+        if len(data.all()) == 0:
+            return
         # Perform some validation
         # This is not a perfect validation, but it should catch most cases
         # and prevent the user from getting a cryptic error later on.

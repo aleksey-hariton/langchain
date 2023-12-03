@@ -163,7 +163,7 @@ class FAISS(VectorStore):
         Returns:
             List of ids from adding the texts into the vectorstore.
         """
-        embeddings = [self.embedding_function(text) for text in texts]
+        embeddings = [self.embedding_function(' '.join(metadata.get('tags', [])) + ' ' + text) for text in texts]
         return self.__add(texts, embeddings, metadatas=metadatas, ids=ids)
 
     def add_embeddings(
@@ -226,6 +226,7 @@ class FAISS(VectorStore):
             doc = self.docstore.search(_id)
             if not isinstance(doc, Document):
                 raise ValueError(f"Could not find document for id {_id}, got {doc}")
+            doc.metadata['_id'] = i.item()
             if filter is not None:
                 filter = {
                     key: [value] if not isinstance(value, list) else value
